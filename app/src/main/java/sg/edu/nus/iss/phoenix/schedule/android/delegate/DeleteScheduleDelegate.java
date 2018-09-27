@@ -11,9 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import sg.edu.nus.iss.phoenix.radioprogram.android.controller.ProgramController;
-import sg.edu.nus.iss.phoenix.radioprogram.android.delegate.DeleteProgramDelegate;
-import sg.edu.nus.iss.phoenix.schedule.android.controller.ManageScheduleController;
+import sg.edu.nus.iss.phoenix.schedule.android.controller.ScheduleController;
 
 import static sg.edu.nus.iss.phoenix.core.android.delegate.DelegateHelper.PRMS_BASE_URL_PROGRAM_SLOT;
 
@@ -21,14 +19,14 @@ import static sg.edu.nus.iss.phoenix.core.android.delegate.DelegateHelper.PRMS_B
  * Created by liu.cao on 18/9/2018.
  */
 
-public class DeleteScheduleDelegate  extends AsyncTask<String, Void, Boolean> {
+public class DeleteScheduleDelegate extends AsyncTask<String, Void, Boolean> {
     // Tag for logging
     private static final String TAG = DeleteScheduleDelegate.class.getName();
 
-    private final ManageScheduleController manageScheduleController;
+    private final ScheduleController scheduleController;
 
-    public DeleteScheduleDelegate(ManageScheduleController manageScheduleController) {
-        this.manageScheduleController = manageScheduleController;
+    public DeleteScheduleDelegate(ScheduleController scheduleController) {
+        this.scheduleController = scheduleController;
     }
 
     @Override
@@ -42,7 +40,7 @@ public class DeleteScheduleDelegate  extends AsyncTask<String, Void, Boolean> {
             return new Boolean(false);
         }
         Uri builtUri = Uri.parse(PRMS_BASE_URL_PROGRAM_SLOT).buildUpon().build();
-        builtUri = Uri.withAppendedPath(builtUri,"delete").buildUpon().build();
+        builtUri = Uri.withAppendedPath(builtUri, "deleteProgramSlot").buildUpon().build();
         builtUri = Uri.withAppendedPath(builtUri, name).buildUpon().build();
         Log.v(TAG, builtUri.toString());
         URL url = null;
@@ -61,7 +59,7 @@ public class DeleteScheduleDelegate  extends AsyncTask<String, Void, Boolean> {
             httpURLConnection.setInstanceFollowRedirects(false);
             httpURLConnection.setRequestMethod("DELETE");
             httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=utf8");
-            httpURLConnection.setUseCaches (false);
+            httpURLConnection.setUseCaches(false);
             System.out.println(httpURLConnection.getResponseCode());
             Log.v(TAG, "Http DELETE response " + httpURLConnection.getResponseCode());
             success = true;
@@ -75,6 +73,6 @@ public class DeleteScheduleDelegate  extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        manageScheduleController.ScheduleDeleted(result.booleanValue());
+        scheduleController.ScheduleDeleted(result.booleanValue());
     }
 }
